@@ -54,6 +54,41 @@ bool pushBack(LinkedList* linkedList, Node* node) {
     return true;
 }
 
+bool popTop(LinkedList* linkedList) {
+    if(linkedList->head == NULL) {
+        return true;
+    }
+    Node* temp = linkedList->head;
+    linkedList->head = linkedList->head->next;
+    free(temp);
+    return true;
+}
+
+bool popBack(LinkedList* linkedList) {
+    if(linkedList->head == NULL) {
+        return true;
+    }
+    Node* temp = linkedList->head;
+    Node* preTemp = NULL;
+    while(temp->next != NULL) {
+        preTemp = temp;
+        temp = temp->next;
+    }
+    if(preTemp == NULL) {
+        Node* alterHead = linkedList->head;
+        linkedList->head = NULL;
+        linkedList->tail = NULL;
+        free(alterHead);
+        return true;
+    }
+    
+    linkedList->tail = preTemp;
+    linkedList->tail->next = NULL;
+    free(temp);
+    return true;
+}
+
+// Mark 
 void removeElementsByValue(LinkedList* linkedList, int value) {
     if(linkedList->head == NULL) {
         return;
@@ -66,6 +101,9 @@ void removeElementsByValue(LinkedList* linkedList, int value) {
         }
         preTemp = temp;
         temp = temp->next;
+    }
+    if(linkedList->head->data == value) {
+        
     }
 }
 
@@ -92,21 +130,20 @@ void free_list(LinkedList* linkedList) {
     }
 }
 
-
 int main() {
-   LinkedList linkedList;
-   init(&linkedList);
-   
-   Node* firstNode = createNode(11);
-   Node* secondNode = createNode(9);
-   Node* thirstNode = createNode(20);
-   
-   pushBack(&linkedList, firstNode);
-   pushBack(&linkedList, secondNode);
-   pushBack(&linkedList, thirstNode);
-   
-   display(linkedList);
-   free_list(&linkedList);
+    LinkedList linkedList;
+    init(&linkedList);
+    
+    Node* firstNode = createNode(11);
+    Node* secondNode = createNode(9);
+    Node* thirstNode = createNode(20);
+    
+    pushBack(&linkedList, firstNode);
+    pushBack(&linkedList, secondNode);
+    pushBack(&linkedList, thirstNode);
 
-    return 0;
+    display(linkedList);
+    free_list(&linkedList);
+
+  return 0;
 }
