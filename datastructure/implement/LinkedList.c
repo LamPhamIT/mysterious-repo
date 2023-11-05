@@ -88,23 +88,29 @@ bool popBack(LinkedList* linkedList) {
     return true;
 }
 
-// Mark 
 void removeElementsByValue(LinkedList* linkedList, int value) {
     if(linkedList->head == NULL) {
         return;
     }
-    Node* temp = linkedList->head->next;;
+    Node* temp = linkedList->head->next;
     Node* preTemp = linkedList->head;
     while(temp != NULL) {
         if(temp->data == value) {
-            preTemp->next = temp->next;
+            Node* alterTemp = temp;
+            temp = temp->next;
+            preTemp->next = temp;
+            free(alterTemp);
+        } else {
+            preTemp = temp;
+            temp = temp->next;
         }
-        preTemp = temp;
-        temp = temp->next;
     }
     if(linkedList->head->data == value) {
-        
+        Node* alterHead = linkedList->head;
+        linkedList->head = linkedList->head->next;
+        free(alterHead);
     }
+    linkedList->tail = preTemp;
 }
 
 void display(LinkedList linkedList) {
@@ -118,7 +124,47 @@ void display(LinkedList linkedList) {
     }
 }
 
-void free_list(LinkedList* linkedList) {
+bool isEmpty(LinkedList linkedList) {
+    if(linkedList.head != NULL) {
+        return true;
+    } 
+    return false;
+}
+
+bool insert(LinkedList* linkedList, int position, int value) {
+    Node* temp = linkedList->head;
+    if(temp == NULL && position == 1) {
+        Node* node = createNode(value);
+        linkedList->head = node;
+        linkedList->tail = node;
+        return true;
+    } else if(temp == NULL && !(position == 1)) {
+        return false;
+    } else if(temp != NULL) {
+        if(position == 1) {
+            Node* node = createNode(value);
+            node->next = linkedList->head;
+            linkedList->head = node;
+            return true;
+        } 
+        int count = 2;
+        Node* temp = linkedList->head;
+        while(temp != NULL) {
+            if(count == position) {
+                Node* node = createNode(value);
+                node->next= temp->next;
+                temp->next = node;
+                return true;
+            }
+            temp = temp->next;
+            count++;
+        }
+        return false;
+    }
+}
+
+
+void freeList(LinkedList* linkedList) {
     if(linkedList->head == NULL) {
         return;
     }
@@ -133,17 +179,22 @@ void free_list(LinkedList* linkedList) {
 int main() {
     LinkedList linkedList;
     init(&linkedList);
-    
+     
     Node* firstNode = createNode(11);
     Node* secondNode = createNode(9);
     Node* thirstNode = createNode(20);
+    Node* fourthNode = createNode(9);
     
+     
     pushBack(&linkedList, firstNode);
     pushBack(&linkedList, secondNode);
     pushBack(&linkedList, thirstNode);
+    pushBack(&linkedList, fourthNode);
+    
+    insert(&linkedList, 1, 69);
 
     display(linkedList);
-    free_list(&linkedList);
+    freeList(&linkedList);
 
   return 0;
 }
